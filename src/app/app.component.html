@@ -5,20 +5,20 @@
     </div>
   </header>
   <div class="content-container">
-    <div class="content-area">
-      <h1>Heat Equation</h1>
-      <router-outlet></router-outlet>
-    </div>
     <nav class="sidenav">
-      <section class="sidenav-content">
+      <section class="sidenav-content vertical-nav">
         <section class="nav-group">
-          <label>{{commonMessages.equationTypes}}</label>
+          <label class="vertical-nav-item">{{commonMessages.equationTypes}}</label>
           <ul class="nav-list" *ngFor="let type of equationTypes">
-            <li><a routerLink="{{type}}" class="{{getStyleClass(type)}}">{{getDisplayName(type)}}</a></li>
+            <li><a routerLink="{{type}}" class="vertical-nav-item {{getStyleClass(type)}}">{{getDisplayName(type)}}</a></li>
           </ul>
         </section>
+        <button class="btn btn-primary preview disabled">Preview</button>
       </section>
     </nav>
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
 

@@ -1,19 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {SolverService} from "../../services/solver.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {EquationType} from "../equation";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'heat-equation',
   templateUrl: './heat-equation.component.html',
   styleUrls: ['./heat-equation.component.less']
 })
-export class HeatEquationComponent implements OnInit {
-  public form: FormGroup;
+export class HeatEquationComponent {
+  public currentSolution: Observable<any>;
+  public formGroup: FormGroup;
 
   constructor(formBuilder: FormBuilder,
               private _solverService: SolverService) {
-    this.form = formBuilder.group({
+    this.formGroup = formBuilder.group({
       alpha: ['', [Validators.required]],
       length: [''],
       timePeriod: [''],
@@ -26,30 +28,31 @@ export class HeatEquationComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {
-  }
-
-  solve(): void {
+  async solve(): Promise<void> {
     const equationBody = {
-      alpha: this.form.get('alpha')?.value,
-      length: this.form.get('length')?.value,
-      time_period: this.form.get('timePeriod')?.value,
-      samples: this.form.get('samples')?.value,
+      alpha: this.formGroup.get('alpha')?.value,
+      length: this.formGroup.get('length')?.value,
+      time_period: this.formGroup.get('timePeriod')?.value,
+      samples: this.formGroup.get('samples')?.value,
       boundary: {
         left_condition: {
-          type: this.form.get('leftBoundaryType')?.value,
-          function: this.form.get('leftBoundaryFunction')?.value
+          type: this.formGroup.get('leftBoundaryType')?.value,
+          function: this.formGroup.get('leftBoundaryFunction')?.value
         },
         right_condition: {
-          type: this.form.get('rightBoundaryType')?.value,
-          function: this.form.get('rightBoundaryFunction')?.value
+          type: this.formGroup.get('rightBoundaryType')?.value,
+          function: this.formGroup.get('rightBoundaryFunction')?.value
         }
       },
-      initial_condition: this.form.get('initialCondition')?.value
+      initial_condition: this.formGroup.get('initialCondition')?.value
     }
-    this._solverService.solveEquation(EquationType.heatEquation, equationBody).toPromise().then(x => {
-      this._solverService.getSolutionById(x['id']).toPromise().then(console.log);
-    });
+    const solverResponse = await this._solverService.solveEquation(EquationType.heatEquation, equationBody).toPromise();
+    if (solverResponse.hasOwnProperty('id')) {
+      this.currentSolution = await this._solverService.getSolutionById(solverResponse.id).toPromise();
+    } else {
+      console.log("failed");
+    }
   }
+
 
 }
