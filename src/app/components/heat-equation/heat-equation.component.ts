@@ -10,7 +10,7 @@ import {Observable} from "rxjs";
   styleUrls: ['./heat-equation.component.less']
 })
 export class HeatEquationComponent {
-  public currentSolution: Observable<any>;
+  public currentSolution?: Observable<any>;
   public formGroup: FormGroup;
 
   constructor(formBuilder: FormBuilder,

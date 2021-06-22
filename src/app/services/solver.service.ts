@@ -10,7 +10,7 @@ export class SolverService {
   private _domain: string;
 
   constructor(private _http: HttpClient) {
-    this._domain = "http://10.0.0.159:8080";
+    this._domain = "http://0.0.0.0:8080";
   }
 
   public solveEquation(equationType: EquationType, equationBody: any): Observable<any> {
