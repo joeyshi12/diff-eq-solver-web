@@ -5,7 +5,7 @@
     <clr-input-container>
       <label>Diffusivity</label>
       <input clrInput
-             placeholder="Enter Number"
+             placeholder="Alpha"
              formControlName="alpha"
       />
     </clr-input-container>
@@ -13,7 +13,7 @@
     <clr-input-container>
       <label>Length</label>
       <input clrInput
-             placeholder="Enter Number"
+             placeholder="L"
              formControlName="length"
       />
     </clr-input-container>
@@ -21,7 +21,7 @@
     <clr-input-container>
       <label>Time Period</label>
       <input clrInput
-             placeholder="Enter Number"
+             placeholder="T"
              formControlName="timePeriod"
       />
     </clr-input-container>
@@ -29,7 +29,7 @@
     <clr-input-container>
       <label>Samples</label>
       <input clrInput
-             placeholder="Enter Integer"
+             placeholder="N"
              formControlName="samples"
       />
     </clr-input-container>
@@ -37,7 +37,7 @@
     <clr-input-container>
       <label>Left Boundary Type</label>
       <input clrInput
-             placeholder="Enter D or N"
+             placeholder="dirichlet or neumann"
              formControlName="leftBoundaryType"
       />
     </clr-input-container>
@@ -45,7 +45,7 @@
     <clr-input-container>
       <label>Left Boundary Function</label>
       <input clrInput
-             placeholder="Enter function of time"
+             placeholder="phi_1(t)"
              formControlName="leftBoundaryFunction"
       />
     </clr-input-container>
@@ -53,7 +53,7 @@
     <clr-input-container>
       <label>Right Boundary Type</label>
       <input clrInput
-             placeholder="Enter D or N"
+             placeholder="dirichlet or neumann"
              formControlName="rightBoundaryType"
       />
     </clr-input-container>
@@ -61,7 +61,7 @@
     <clr-input-container>
       <label>Right Boundary Function</label>
       <input clrInput
-             placeholder="Enter function of time"
+             placeholder="phi_2(t)"
              formControlName="rightBoundaryFunction"
       />
     </clr-input-container>
@@ -69,11 +69,14 @@
     <clr-input-container>
       <label>Initial Condition</label>
       <input clrInput
-             placeholder="Enter function of x"
+             placeholder="f(x)"
              formControlName="initialCondition"
       />
     </clr-input-container>
 
-    <button class="btn btn-primary submit" type="submit">Submit</button>
+    <div class="button-group clr-offset-lg-2">
+      <button class="btn btn-primary" type="submit">Submit</button>
+      <button class="btn btn-primary" [disabled]="!solutionId" (click)="exportSolution()">Export</button>
+    </div>
   </form>
 </div>

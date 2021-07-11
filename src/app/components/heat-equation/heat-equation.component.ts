@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {SolverService} from "../../services/solver.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {EquationType} from "../equation";
-import {Observable} from "rxjs";
+import {EquationType, HeatEquation} from "../equation";
+import {SolutionState, SolutionStatus} from "../../services/solution-status";
 
 @Component({
   selector: 'heat-equation',
@@ -10,7 +10,7 @@ import {Observable} from "rxjs";
   styleUrls: ['./heat-equation.component.less']
 })
 export class HeatEquationComponent {
-  public currentSolution?: Observable<any>;
+  public solutionId: string = "";
   public formGroup: FormGroup;
 
   constructor(formBuilder: FormBuilder,
@@ -28,8 +28,22 @@ export class HeatEquationComponent {
     })
   }
 
-  async solve(): Promise<void> {
-    const equationBody = {
+  public solve(): void {
+    this._solverService.solveEquation(EquationType.heatEquation, this._getEquationBody())
+      .then((state: SolutionState) => {
+        if (state.status == SolutionStatus.success) {
+          this.solutionId = state.id;
+        }
+      });
+  }
+
+  public exportSolution(): void {
+    this._solverService.exportSolutionById(this.solutionId);
+    this.solutionId = "";
+  }
+
+  private _getEquationBody(): HeatEquation {
+    return {
       alpha: this.formGroup.get('alpha')?.value,
       length: this.formGroup.get('length')?.value,
       time_period: this.formGroup.get('timePeriod')?.value,
@@ -46,13 +60,5 @@ export class HeatEquationComponent {
       },
       initial_condition: this.formGroup.get('initialCondition')?.value
     }
-    const solverResponse = await this._solverService.solveEquation(EquationType.heatEquation, equationBody).toPromise();
-    if (solverResponse.hasOwnProperty('id')) {
-      this.currentSolution = await this._solverService.getSolutionById(solverResponse.id).toPromise();
-    } else {
-      console.log("failed");
-    }
   }
-
-
 }
